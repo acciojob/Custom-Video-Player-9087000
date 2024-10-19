@@ -7,31 +7,54 @@ const toggle = player.querySelector('.toggle');
 const skipButtons = player.querySelectorAll('[data-skip]');
 const ranges = player.querySelectorAll('.player__slider');
 
-// toggle.addEventListener("click",(event)=>{
-// 	video.play() ? video.pause() : video.play();
-// });
 
-toggle.addEventListener("click", playPauseMedia);
-video.addEventListener("click", playPauseMedia);
-player.addEventListener("click", playPauseMedia);
-progress.addEventListener("click", handleProgress);
-function playPauseMedia() {
-  if (video.paused) {
-    //play.setAttribute("data-icon", "u");
-    video.play();
-  } else {
-    //play.setAttribute("data-icon", "P");
-    video.pause();
-  }
-}
+toggle.addEventListener("click",()=>{
+	if(video.paused){
+		video.play();
+		toggle.innerText="❚ ❚";
+	}else{
+		video.pause();
+		toggle.innerText="►"
+	}
+})
 
-skipButtons.addEventListener("click", skip);
-function skip() {
-  const skipAmount = parseFloat(this.dataset.skip);
-  video.currentTime += skipAmount;
-}
+video.addEventListener("change",()=>{
+	let weidthOfProgress= (video.currentTime*100)/video.duration;
+	progressBar.style.weidth=`${weidthOfProgress}%`
+})
 
-function handleProgress() {
-  const percent = (video.currentTime / video.duration) * 100;
-  progressBar.style.flexBasis = `${percent}%`;
+function seekTime(direction){
+	direction===skipButtons[0].innerText :(video.currentTime-=10)?( video.currentTime+=25)
 }
+// console.log(skipButtons)
+skipButtons[0].addEventListener("click", seekTime(skipButtons[0].innerText))
+skipButtons[1].addEventListener("click", seekTime(skipButtons[1].innerText))
+
+ranges[0].addEventListener("change",()=>{
+	// console.log("volume change")
+	let volumeChange=ranges[0].value;
+	video.volume=volumeChange;
+})
+
+ranges[1].addEventListener("change",()=>{
+	// console.log("speed change")
+	let speedChange=ranges[1].value;
+	let mapRanges={
+		0.5:0.5,
+		1.0:1,
+		1.5:1.5,
+		2:2
+	}
+	video.playbackRate=mapRanges[speedChange];
+})
+
+
+
+
+
+
+
+
+
+
+
